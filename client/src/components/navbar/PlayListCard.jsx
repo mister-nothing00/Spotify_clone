@@ -1,9 +1,9 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { memo } from "react";
 import { FaMusic } from "react-icons/fa";
 import { UserData } from "../../hook/context/User";
 
-export default function PlayListCard() {
+function PlayListCard() {
   const { user } = UserData();
 
   return (
@@ -11,8 +11,8 @@ export default function PlayListCard() {
       <Box
         display={"flex"}
         flexDirection={"column"}
-        justifyContent={"center"}
         alignItems={"center"}
+        justifyContent={"space-between"}
         p={4}
         mt={2}
         rounded={"lg"}
@@ -22,21 +22,13 @@ export default function PlayListCard() {
         bg={"whiteAlpha.100"}
         width={"100%"}
       >
-        <Heading fontSize={"sm"} display={"block"}>My Playlist</Heading>
-        <Box display={"flex"} alignItems={"center"} width={"100%"}>
-          <FaMusic />
-          <Box
-            ml={4}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-          >
-            <Text ps={1}>
-              {user.name}
-            </Text>
-          </Box>
-        </Box>
+        <Heading fontSize={"sm"} >
+          My Playlist
+        </Heading>
+       
       </Box>
     </>
   );
 }
+
+export default memo(PlayListCard);

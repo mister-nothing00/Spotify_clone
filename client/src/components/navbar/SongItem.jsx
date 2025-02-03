@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { FaBookmark, FaPlay, FaRegBookmark } from "react-icons/fa";
 import { UserData } from "../../hook/context/User";
 import { SongData } from "../../hook/context/Song";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 
-export default function SongItem({ image, name, desc, id }) {
+ function SongItem({ image, name, desc, id }) {
   const [saved, setSaved] = useState(false);
   const [hovered, setHovered] = useState(false);
 
   const { addToPlaylist, user } = UserData();
 
-  const { setSelectedSong, isPlaying, setIsPlaying } = SongData();
+  const { setSelectedSong, setIsPlaying } = SongData();
 
   const playList = user.playlist;
 
@@ -78,3 +78,5 @@ export default function SongItem({ image, name, desc, id }) {
     </Box>
   );
 }
+
+export default memo(SongItem);

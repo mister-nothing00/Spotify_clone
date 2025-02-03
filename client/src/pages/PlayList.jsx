@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import Layout from "../components/navbar/Layout";
 import { SongData } from "../hook/context/Song";
 import { Box, Divider, Flex, Grid, Heading, IconButton, Image, Text } from "@chakra-ui/react";
@@ -6,7 +6,7 @@ import { UserData } from "../hook/context/User";
 import Logo from "../assets/logo.png";
 import { FaBookmark, FaPlay } from "react-icons/fa";
 
-export default function PlayList({ user }) {
+ function PlayList({ user }) {
   const { songs, setSelectedSong, setIsPlaying } = SongData();
 
   const [myPlaylist, setMyPlaylist] = useState([]);
@@ -127,3 +127,6 @@ export default function PlayList({ user }) {
     </>
   );
 }
+ 
+
+export default memo(PlayList);

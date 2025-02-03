@@ -10,7 +10,7 @@ export const registerUser = TryCatch(async (req, res) => {
 
   if (user)
     return res.status(400).json({
-      message: "User Already Exists !",
+      message: "User already exists 🙄",
     });
 
   const hashPassword = await bcrypt.hash(password, 10);
@@ -24,7 +24,7 @@ export const registerUser = TryCatch(async (req, res) => {
   generateToken(user._id, res);
   res.status(201).json({
     user,
-    message: " User Registered !",
+    message: " User registered 😉",
   });
 });
 
@@ -35,21 +35,21 @@ export const loginUser = TryCatch(async (req, res) => {
 
   if (!user)
     return res.status(400).json({
-      message: "No User Exist !",
+      message: "No user exist !",
     });
 
   const comparePassword = await bcrypt.compare(password, user.password);
 
   if (!comparePassword)
     return res.status(400).json({
-      message: "Wrong Password !",
+      message: "Wrong Password ❌ !",
     });
 
   generateToken(user._id, res);
 
   res.status(200).json({
     user,
-    message: " SUCCESS: LOGGIN !",
+    message: "Welcome 🪄",
   });
 });
 

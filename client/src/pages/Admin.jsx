@@ -11,7 +11,7 @@ import {
   Text,
   Spinner,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { UserData } from "../hook/context/User.jsx";
 import { SongData } from "../hook/context/Song.jsx";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ import useShowToast from "../hook/useShowToast.js";
 import { MdDelete, MdOutlineTitle } from "react-icons/md";
 import { CiTextAlignLeft } from "react-icons/ci";
 
-export default function Admin() {
+ function Admin() {
   const { user } = UserData();
   const {
     albums,
@@ -354,3 +354,5 @@ export default function Admin() {
     </>
   );
 }
+
+export default memo(Admin);

@@ -1,31 +1,33 @@
-import React from "react";
+import { memo } from "react";
+
 import Layout from "../components/navbar/Layout";
 import { Box, Heading } from "@chakra-ui/react";
 import { SongData } from "../hook/context/Song";
 import AlbumItem from "../components/navbar/AlbumItem";
 import SongItem from "../components/navbar/SongItem";
 
-export default function Home() {
+function Home() {
   const { songs, albums } = SongData();
 
   return (
     <>
-      <Box overflow={"auto"}>
+      <Box width={"100%"} overflow={"auto"}>
         <Layout>
           <Box
             display={"flex"}
             flexDirection={"column"}
+            justifyContent={"flex-start"}
+            alignItems={"flex-start"}
             width={"100%"}
             gap={2}
             fontFamily={"Poppins"}
             mb={10}
-            ps={3}
             
           >
-            <Heading fontSize={"lg"} px={3}  >
+            <Heading fontSize={"lg"} px={3}>
               Featured Charts
             </Heading>
-            <Box width={"100%"} display={"flex"} gap={5}>
+            <Box display={"flex"} gap={5} width={"100%"}>
               {albums.map((e, i) => (
                 <AlbumItem
                   key={i}
@@ -38,15 +40,17 @@ export default function Home() {
             </Box>
           </Box>
 
-          <Box display={"flex"} flexDirection={"column"} gap={2} mb={4}  ps={3}>
-            <Heading fontSize={"lg"} px={3} mb={3} >Today's biggest hits</Heading>
+          <Box display={"flex"} flexDirection={"column"} gap={2} mb={4} ps={3}>
+            <Heading fontSize={"lg"} px={3} mb={3}>
+              Today's biggest hits
+            </Heading>
             <Box
               display={"flex"}
-              flexDirection={"row"}
-              width={"100%"}
-              gap={2}
+              justifyContent={{ base: "flex-start", md: "flex-start" }}
+              flexDirection={{ base: "column", md: "row" }}
+              width={"90%"}
+              gap={5}
               fontFamily={"Poppins"}
-              mb={10}
             >
               {songs.map((e, i) => (
                 <SongItem
@@ -64,3 +68,5 @@ export default function Home() {
     </>
   );
 }
+
+export default memo(Home);

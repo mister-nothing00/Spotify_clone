@@ -7,9 +7,26 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState([]);
   const [isAuth, setIsAuth] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const showToast = useShowToast();
 
+
+  
+
+  async function fetchUser() {
+    try {
+      const { data } = await axios.get("/api/user/me");
+      setUser(data);
+      setIsAuth(true);
+      setLoading(true);
+    } catch (error) {
+      console.log(error);
+      setIsAuth(false);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
   async function registerUser(
     name,
     email,
@@ -35,6 +52,8 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       showToast("Error", error.message, "error");
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -59,20 +78,7 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  async function fetchUser() {
-    try {
-      const { data } = await axios.get("/api/user/me");
-      setUser(data);
-      setIsAuth(true);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsAuth(false);
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  }
+ 
 
   async function logoutUser() {
     try {
@@ -94,9 +100,11 @@ export const UserProvider = ({ children }) => {
     }
   }
 
+  
   useEffect(() => {
     fetchUser();
   }, []);
+
   return (
     <UserContext.Provider
       value={{

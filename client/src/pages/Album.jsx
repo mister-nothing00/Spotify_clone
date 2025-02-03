@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import Layout from "../components/navbar/Layout";
 import { SongData } from "../hook/context/Song";
 import { useParams } from "react-router-dom";
@@ -146,4 +146,4 @@ const Album = () => {
   );
 };
 
-export default Album;
+export default memo(Album);

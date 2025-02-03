@@ -1,6 +1,7 @@
 //SERVER
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import connectDb from "./database/db.js";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
@@ -19,12 +20,17 @@ cloudinary.v2.config({
 //APP
 const app = express();
 
-
 // MIDDLEWARE
 
 app.use(express.json());
 app.use(cookieParser());
-
+app.use(
+  cors({
+    origin:
+      "http://localhost:5000" || "https://spotify-clone-xz46.onrender.com",
+      methods:["POST", "GET", "DELETE"]
+  })
+);
 
 const port = process.env.PORT;
 

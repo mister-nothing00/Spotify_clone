@@ -1,20 +1,20 @@
 import { Box, Button, Link, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { memo } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { TbSquareRoundedChevronLeft } from "react-icons/tb";
 import { TbSquareRoundedChevronRight } from "react-icons/tb";
 import { UserData } from "../../hook/context/User";
 
-export default function Navbar() {
-  const navigate = useNavigate();
+function Navbar() {
   const { user, logoutUser } = UserData();
+  const navigate = useNavigate();
   return (
     <>
       <Box
         display={"flex"}
         flexDirection={"column"}
         alignItems={"flex-start"}
-        width={"auto"}
+        width={"100%"}
         fontFamily={"Poppins"}
       >
         <Box
@@ -28,11 +28,11 @@ export default function Navbar() {
         >
           <Box display={"flex"} alignItems={"center"} gap={2} width={"auto"}>
             <TbSquareRoundedChevronLeft
-              size={24}
+              size={32}
               onClick={() => navigate(-1)}
             />
             <TbSquareRoundedChevronRight
-              size={24}
+              size={32}
               onClick={() => navigate(+1)}
             />
           </Box>
@@ -48,16 +48,17 @@ export default function Navbar() {
                 {user && user.role === "admin" ? "Admin" : "Home"}
               </Link>
             </Button>
+
             <Button
               size={"sm"}
               borderRadius={"14px"}
-              bg={"blackAlpha.800"}
-              color={"white"}
+              variant={"outline"}
+              onClick={logoutUser}
+             
             >
-              <Text fontSize={"xs"}>Installa App</Text>
-            </Button>
-            <Button size={"sm"} borderRadius={"14px"} onClick={logoutUser}>
-              <Text fontSize={"xs"}>Logout</Text>
+              <Text fontSize={"xs"} color={"white"} _hover={{ color: "blackAlpha.800" }} >
+                Logout
+              </Text>
             </Button>
           </Box>
         </Box>
@@ -66,7 +67,9 @@ export default function Navbar() {
           <Button
             borderRadius={"16px"}
             size={"sm"}
+            onClick={() => navigate("/")}
             _hover={{ fontWeight: "bold" }}
+
           >
             All
           </Button>
@@ -104,3 +107,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export default memo(Navbar);

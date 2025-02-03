@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { SongData } from "../../hook/context/Song";
 import { Box, Button, Image, Input, Text } from "@chakra-ui/react";
 import { GrChapterPrevious, GrChapterNext } from "react-icons/gr";
 import { FaPause, FaPlay } from "react-icons/fa";
 
-export default function Player() {
+ function Player() {
   const {
     song,
     fetchSingleSong,
@@ -266,3 +266,5 @@ export default function Player() {
     </>
   );
 }
+
+export default memo(Player);

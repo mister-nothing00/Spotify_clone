@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { memo, useState } from "react";
 import {
   Box,
   Button,
@@ -15,16 +15,16 @@ import { MdOutlineMailLock } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import useShowToast from "../hook/useShowToast";
 import { UserData } from "../hook/context/User";
-import {SongData} from "../hook/context/Song"
+import { SongData } from "../hook/context/Song";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {registerUser, loading} = UserData()
+  const { loading, registerUser } = UserData();
   const showToast = useShowToast();
-  const navigate= useNavigate()
+  const navigate = useNavigate();
 
   const { fetchSongs, fetchAlbums } = SongData();
 
@@ -35,18 +35,17 @@ export default function Register() {
       showToast("Error", "Please fill all fields", "error");
       return;
     }
-    
-    registerUser(name, email, password, navigate, fetchSongs, fetchAlbums)
-    
+
+    registerUser(name, email, password, navigate, fetchSongs, fetchAlbums);
   };
 
   return (
     <Box
       display={"flex"}
       flexDir={"column"}
-      justifyContent={"flex-start"}
+      justifyContent={{ sm: "center", md: "flex-start" }}
       alignItems={"center"}
-      gap={8}
+      gap={4}
       width={"100%"}
       mx={"auto"}
       mb={5}
@@ -55,7 +54,7 @@ export default function Register() {
       <Image
         src={Logo}
         alt="Logo"
-        width={"100px"}
+        width={"150px"}
         objectFit={"cover"}
         mt={10}
       />
@@ -65,7 +64,7 @@ export default function Register() {
         fontWeight={"semibold"}
         letterSpacing={0.5}
       >
-        Sign up to start listening
+        Sign up to listen
       </Text>
 
       <Box
@@ -74,7 +73,7 @@ export default function Register() {
         justifyContent={"center"}
         alignItems={"center"}
         gap={5}
-        width={"60%"}
+        width={"80%"}
       >
         <form onSubmit={handleSubmit}>
           <InputGroup width={"full"}>
@@ -155,3 +154,4 @@ export default function Register() {
     </Box>
   );
 }
+export default memo(Register);

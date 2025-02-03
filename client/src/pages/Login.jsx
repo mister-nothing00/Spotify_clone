@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { memo, useState } from "react";
 import {
   Box,
   Button,
@@ -7,7 +7,6 @@ import {
   InputLeftElement,
   Text,
   Image,
-  Spinner,
   Link,
 } from "@chakra-ui/react";
 import { MdOutlineMailLock } from "react-icons/md";
@@ -18,38 +17,33 @@ import useShowToast from "../hook/useShowToast";
 import { UserData } from "../hook/context/User";
 import { SongData } from "../hook/context/Song";
 
-
-export default function Login() {
+ function Login() {
   const [email, setEmail] = useState("");
-  const [password, setPassword]= useState("");
+  const [password, setPassword] = useState("");
 
-  const {loginUser, loading} = UserData()
+  const { loginUser, loading } = UserData();
 
   const { fetchSongs, fetchAlbums } = SongData();
-  
-  const showToast = useShowToast();
-  const navigate= useNavigate()
 
-  
+  const showToast = useShowToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ( !email || !password) {
+    if (!email || !password) {
       showToast("Error", "Please fill all fields", "error");
       return;
     }
-    
-    loginUser(email, password, navigate, fetchSongs, fetchAlbums)
-    
+
+    loginUser(email, password, navigate, fetchSongs, fetchAlbums);
   };
 
- 
   return (
     <Box
       display={"flex"}
       flexDir={"column"}
-      justifyContent={"flex-start"}
+      justifyContent={{sm:"center",md:"flex-start"}}
       alignItems={"center"}
       gap={8}
       width={"100%"}
@@ -69,17 +63,18 @@ export default function Login() {
         fontSize={{ base: "3xl", md: "4xl" }}
         fontWeight={"semibold"}
         letterSpacing={0.5}
+        textAlign={{base:"center", md:"left"}}
       >
         Login to start your journey
       </Text>
 
       <Box
         display={"flex"}
-        flexDir={"column"}
+        flexDirection={"column"}
         justifyContent={"center"}
         alignItems={"center"}
         gap={5}
-        width={"60%"}
+        width={"100%"}
       >
         <form onSubmit={handleSubmit}>
           <InputGroup width={"full"}>
@@ -141,8 +136,8 @@ export default function Login() {
           </Link>
         </Text>
       </Box>
-
-      
     </Box>
   );
 }
+
+export default memo(Login);

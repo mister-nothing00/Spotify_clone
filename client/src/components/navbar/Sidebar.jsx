@@ -1,5 +1,4 @@
-import React from "react";
-import { UserData } from "../../hook/context/User.jsx";
+import React, { memo } from "react";
 import { Box, Button, Divider, Link, Text } from "@chakra-ui/react";
 import { IoHome, IoSearch } from "react-icons/io5";
 import { MdOutlineLibraryMusic } from "react-icons/md";
@@ -8,15 +7,14 @@ import { LuPlusCircle } from "react-icons/lu";
 import { Link as RouterLink } from "react-router-dom";
 import PlayListCard from "./PlayListCard.jsx";
 
-export default function Sidebar() {
-  const { user } = UserData();
+function Sidebar() {
   return (
     <>
       <Box
         display={{ base: "none", md: "block" }}
         position="sticky"
-        width={"250px"}
-        ps={4}
+        width={"240px"}
+        p={4}
         bg={"black"}
         py={10}
         height={"100%"}
@@ -24,34 +22,34 @@ export default function Sidebar() {
       >
         <Box
           background={"gray.900"}
-          borderRadius={"16px"}
+          borderRadius={"8px"}
           flexDirection={"column"}
           justifyContent={"flex-start"}
-          alignContent={"flex-start"}
+          alignContent={"center"}
           width={"90%"}
-          mb={10}
-          p={4}
+          mb={8}
+          p={2}
         >
           <Link
             as={RouterLink}
             to={"/"}
             display={"flex"}
             alignItems={"center"}
-            _hover={{ textDecoration: "none", fontWeight: "semibold" }}
+            _hover={{ textDecoration: "none" }}
           >
-            <IoHome size={24} />
-            <Text fontFamily={"Poppins"} fontSize={"sm"} ms={2}>
+            <IoHome size={20} />
+            <Text fontFamily={"Poppins"} fontSize={"xs"} ms={2}>
               Home
             </Text>
           </Link>
 
           <Box display={"flex"} alignItems={"center"} mt={5}>
-            <IoSearch size={24} />
+            <IoSearch size={20} />
             <Text
               fontFamily={"Poppins"}
-              fontSize={"sm"}
+              fontSize={"xs"}
               ms={2}
-              _hover={{ textDecoration: "none", fontWeight: "semibold" }}
+              _hover={{ textDecoration: "none" }}
             >
               Search
             </Text>
@@ -61,8 +59,7 @@ export default function Sidebar() {
         {/* CONTENUTO FIGLIO* */}
         <Box
           bg={"gray.900"}
-          h={"auto"}
-          rounded={"md"}
+          rounded={"2xl"}
           py={4}
           px={2}
           me={2}
@@ -76,8 +73,13 @@ export default function Sidebar() {
             gap={2}
             width={"100%"}
           >
-            <Box display={"flex"} alignItems={"center"} width={"100%"}>
-              <MdOutlineLibraryMusic />
+            <Box
+              display={"flex"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              width={"100%"}
+            >
+              <MdOutlineLibraryMusic size={20} />
               <Text
                 display={{ base: "none", md: "block" }}
                 fontFamily={"Poppins"}
@@ -88,10 +90,6 @@ export default function Sidebar() {
                 Your Library
               </Text>
             </Box>
-            <Box display={"flex"} alignItems={"center"} gap={2}>
-              <FaArrowRight />
-              <LuPlusCircle />
-            </Box>
           </Box>
           <Divider opacity={0.1} bg={"gray.100"} my={1} />
 
@@ -99,23 +97,35 @@ export default function Sidebar() {
             as={RouterLink}
             to={"/playlist"}
             fontFamily={"Poppins"}
-            fontSize={"sm"}
-            _hover={{ textDecoration: "none", fontWeight: "semibold" }}
+            fontSize={"xs"}
+            _hover={{ textDecoration: "none", fontWeight: "medium" }}
           >
             <PlayListCard />
           </Link>
 
-          <Box display={"flex"} flexDirection={"column"} gap={5} my={8}>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            gap={5}
+            my={8}
+          >
             <Text
               fontFamily={"Poppins"}
               fontWeight={"medium"}
               fontSize={"md"}
               width={"100%"}
-              textAlign={"left"}
+              textAlign={"center"}
             >
               Let's find some podcasts to follow
             </Text>
-            <Text fontWeight={"light"} fontSize={"2xs"} textAlign={"left"} width={"100%"}>
+            <Text
+              fontWeight={"light"}
+              fontSize={"2xs"}
+              textAlign={"center"}
+              width={"100%"}
+            >
               We'll keep you updated on new episodes
             </Text>
             <Button
@@ -136,3 +146,5 @@ export default function Sidebar() {
     </>
   );
 }
+
+export default memo(Sidebar);
