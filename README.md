@@ -29,8 +29,11 @@ A **Spotify** clone that allows users to **listen to music, manage playlists** a
 ## 📂 Project Structure
 
 📁 **client/** → Frontend developed with **React and Vite**
+
 📁 **server/** → Backend developed with **Node.js, Express and MongoDB**
+
 📜 **package.json** → Dependency configuration file
+
 🔧 **.env** → Environment variables file
 
 ---
