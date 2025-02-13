@@ -7,9 +7,13 @@ A **Spotify** clone that allows users to **listen to music, manage playlists** a
 ## 🚀 Features
 
 ✔️ **Secure authentication** with JWT
+
 ✔️ **Playlist management** (create, edit, delete)
+
 ✔️ **Add/remove songs** in playlists
+
 ✔️ **Upload and manage** music files via **Cloudinary**
+
 ✔️ **Admin panel** for content management
 
 ---
