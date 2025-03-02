@@ -43,13 +43,13 @@ function Register() {
     <Box
       display={"flex"}
       flexDir={"column"}
-      justifyContent={{ sm: "center", md: "center" }}
+      justifyContent={{ sm: "center", md: "flex-start" }}
       alignItems={"center"}
       gap={4}
       width={"100%"}
       mx={"auto"}
       mb={5}
-      height={"100vh"}
+      height={"auto"}
     >
       <Image
         src={Logo}

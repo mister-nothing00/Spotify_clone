@@ -1,9 +1,11 @@
-import { Box, Heading, } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import React, { memo } from "react";
-
+import { FaMusic } from "react-icons/fa";
+import { UserData } from "../../hook/context/User";
 
 function PlayListCard() {
- 
+  const { user } = UserData();
+
   return (
     <>
       <Box

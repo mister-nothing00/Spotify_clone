@@ -27,7 +27,7 @@ function App() {
               element={isAuth ? <Home /> : <Register />}
             />
             <Route path="/" element={isAuth ? <Home /> : <Login />} />
-            <Route path="/admin" element={user?.role === "admin" ? <Admin /> : <Home />} />
+            <Route path="/admin" element={isAuth ? <Admin /> : <Login />} />
             <Route
               path="/playlist"
               element={isAuth ? <PlayList user={user} /> : <Login />}

@@ -2,6 +2,8 @@ import React, { memo } from "react";
 import { Box, Button, Divider, Link, Text } from "@chakra-ui/react";
 import { IoHome, IoSearch } from "react-icons/io5";
 import { MdOutlineLibraryMusic } from "react-icons/md";
+import { FaArrowRight } from "react-icons/fa";
+import { LuPlusCircle } from "react-icons/lu";
 import { Link as RouterLink } from "react-router-dom";
 import PlayListCard from "./PlayListCard.jsx";
 

@@ -4,10 +4,10 @@ import Sidebar from "./Sidebar.jsx";
 import Navbar from "./Navbar.jsx";
 import Player from "./Player.jsx";
 
-function Layout({ children }) {
+ function Layout({ children }) {
   return (
     <>
-      <Box background={"blackAlpha.900"} color={"white"} height="100vh">
+      <Box background={"blackAlpha.900"} color={"white"} height="100vh"  >
         <Box display={"flex"} width={"100%"} height={"100%"}>
           <Sidebar />
           <Box
@@ -16,15 +16,13 @@ function Layout({ children }) {
             gap={4}
             paddingRight={4}
             width={"100%"}
-            overflow={"auto"}
+            overflow={"auto"} 
           >
-            <header>
-              <Navbar />
-            </header>
+            <Navbar />
             {children}
           </Box>
         </Box>
-        <Player />
+        <Player/>
       </Box>
     </>
   );
