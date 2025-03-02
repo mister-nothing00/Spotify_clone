@@ -26,12 +26,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5000",
+    origin: "https://spotify-clone-xz46.onrender.com",
     methods: ["POST", "GET", "DELETE"],
     credentials: true,
   })
 );
-//|| "https://spotify-clone-xz46.onrender.com",
+
 
 const port = process.env.PORT || 5000;
 

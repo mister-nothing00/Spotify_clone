@@ -1,7 +1,7 @@
 {
   "name": "spotify_clone",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server/index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,10 +9,22 @@
     "dev": "nodemon server/index.js",
     "build": "npm install && cd client && npm install && npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "spotify-clone",
+    "music-app",
+    "backend",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "Francesco di Vita",
+  "license": "MIT",
+  "description": "Backend for Spotify Clone application",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mister-nothing00/Spotify_clone"
+  },
+  "homepage": "https://spotify-clone-xz46.onrender.com",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
