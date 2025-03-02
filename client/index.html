@@ -1,30 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="src/assets/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Meta Tags -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    
+    <!-- Meta Tags principali -->
+    <title>Spotify Clone | Ascolta, crea playlist e scopri nuova musica</title>
     <meta name="author" content="Francesco di Vita" />
-    <meta
-      name="description"
-      content="Clone di Spotify che permette di ascoltare, aggiungere e gestire playlist, canzoni e molto altro!"
-    />
-    <meta
-      name="keywords"
-      content="Spotify Clone, Musica, Playlist, Node, Express, MongoDB, React, Vite"
-    />
-    <meta property="og:title" content="Spotify Clone" />
-    <meta
-      property="og:description"
-      content="Clone di Spotify con funzionalità di gestione playlist e ascolto di brani, design responsive e gestione per amministratori."
-    />
-    <meta property="og:image" content="src/assets/favicon.ico" />
-    <meta property="og:url" content="" />
-    <title>Spotify Clone</title>
+    <meta name="description" content="Ascolta la tua musica preferita, crea playlist personalizzate e scopri nuove canzoni con questa web app ispirata a Spotify. Esperienza musicale completa!" />
+    <meta name="keywords" content="Spotify, musica streaming, playlist, ascoltare musica online, Francesco di Vita, app musicale, web player" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://spotify-clone-xz46.onrender.com" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Spotify Clone | La tua musica, ovunque" />
+    <meta property="og:description" content="Ascolta la tua musica preferita, crea playlist personalizzate e scopri nuove canzoni con questa web app ispirata a Spotify." />
+    <meta property="og:image" content="/favicon.ico" />
+    <meta property="og:url" content="https://spotify-clone-xz46.onrender.com" />
+    <meta property="og:site_name" content="Spotify Clone" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Spotify Clone | La tua musica, ovunque" />
+    <meta name="twitter:description" content="Ascolta la tua musica preferita, crea playlist personalizzate e scopri nuove canzoni con questa web app ispirata a Spotify." />
+    <meta name="twitter:image" content="/favicon.ico" />
+    
+    <!-- Colore del tema per browser mobili -->
+    <meta name="theme-color" content="#1DB954" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Preconnect ai domini utilizzati per migliorare performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Spotify Clone",
+        "url": "https://spotify-clone-xz46.onrender.com",
+        "author": {
+          "@type": "Person",
+          "name": "Francesco di Vita",
+          "url": "https://github.com/mister-nothing00"
+        },
+        "description": "Ascolta la tua musica preferita, crea playlist personalizzate e scopri nuove canzoni con questa web app ispirata a Spotify.",
+        "applicationCategory": "MusicPlayer",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>Per utilizzare questa applicazione è necessario abilitare JavaScript nel tuo browser.</noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

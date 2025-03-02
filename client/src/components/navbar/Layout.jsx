@@ -1,30 +1,57 @@
 import React, { memo } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Sidebar from "./Sidebar.jsx";
 import Navbar from "./Navbar.jsx";
 import Player from "./Player.jsx";
 
- function Layout({ children }) {
+function Layout({ children }) {
   return (
-    <>
-      <Box background={"blackAlpha.900"} color={"white"} height="100vh"  >
-        <Box display={"flex"} width={"100%"} height={"100%"}>
-          <Sidebar />
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            gap={4}
-            paddingRight={4}
-            width={"100%"}
-            overflow={"auto"} 
+    <Box 
+      bg="linear-gradient(180deg, #121212 0%, #000000 100%)" 
+      color="white" 
+      minH="100vh"
+      overflowX="hidden"
+    >
+      <Flex height="calc(100vh - 70px)"> {/* 70px è l'altezza del Player */}
+        {/* Sidebar */}
+        <Sidebar />
+        
+        {/* Contenuto principale */}
+        <Flex
+          direction="column"
+          flex="1"
+          overflow="hidden"
+        >
+          {/* Navbar */}
+          <Navbar />
+          
+          {/* Contenuto senza scrollbar visibile */}
+          <Box 
+            overflowY="auto" 
+            flex="1" 
+            px={{ base: 2, md: 4 }}
+            py={4}
+            css={{
+              /* Nascondi scrollbar per Chrome, Safari e Opera */
+              '&::-webkit-scrollbar': {
+                display: 'none',
+              },
+              /* Nascondi scrollbar per IE, Edge e Firefox */
+              'msOverflowStyle': 'none',  /* IE e Edge */
+              'scrollbarWidth': 'none',  /* Firefox */
+            }}
           >
-            <Navbar />
             {children}
+            
+            {/* Spazio extra in fondo per evitare che il contenuto sia nascosto sotto il player */}
+            <Box height="80px" />
           </Box>
-        </Box>
-        <Player/>
-      </Box>
-    </>
+        </Flex>
+      </Flex>
+      
+      {/* Player fisso in basso */}
+      <Player />
+    </Box>
   );
 }
 

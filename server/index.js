@@ -27,9 +27,11 @@ app.use(cookieParser());
 app.use(
   cors({
     origin:
-      "http://localhost:5000" || "https://spotify-clone-xz46.onrender.com",
-      methods:["POST", "GET", "DELETE"]
+      "http://localhost:5000",
+      methods:["POST", "GET", "DELETE"],
+      credentials:true
   })
+  
 );
 
 const port = process.env.PORT;
@@ -54,6 +56,6 @@ app.get("*", (req, res) => {
 
 //listener
 app.listen(port, () => {
-  console.log(`Server in esecuzione su http://localhost:${port}`);
+  console.log(`Server in esecuzione`);
   connectDb();
 });

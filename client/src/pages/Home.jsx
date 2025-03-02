@@ -1,7 +1,6 @@
 import { memo } from "react";
-
 import Layout from "../components/navbar/Layout";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Flex, Grid, Text } from "@chakra-ui/react";
 import { SongData } from "../hook/context/Song";
 import AlbumItem from "../components/navbar/AlbumItem";
 import SongItem from "../components/navbar/SongItem";
@@ -10,62 +9,166 @@ function Home() {
   const { songs, albums } = SongData();
 
   return (
-    <>
-      <Box width={"100%"} overflow={"auto"}>
-        <Layout>
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"flex-start"}
-            alignItems={"flex-start"}
-            width={"100%"}
-            gap={2}
-            fontFamily={"Poppins"}
-            mb={10}
-            
+    <Box width="100%" overflowX="hidden">
+      <Layout>
+        {/* Sezione Albums */}
+        <Box
+          as="section"
+          mb={16} // Aumentato lo spazio tra le sezioni
+          px={4}
+          pt={5}
+        >
+          <Flex 
+            justify="space-between" 
+            align="center" 
+            mb={8} // Aumentato lo spazio prima della griglia
           >
-            <Heading fontSize={"lg"} px={3}>
+            <Heading 
+              fontSize={{ base: "xl", md: "2xl" }} 
+              fontWeight="bold"
+              letterSpacing="tight"
+            >
               Featured Charts
             </Heading>
-            <Box display={"flex"} gap={5} width={"100%"}>
-              {albums.map((e, i) => (
-                <AlbumItem
-                  key={i}
-                  image={e.thumbnail.url}
-                  name={e.title}
-                  desc={e.description}
-                  id={e._id}
-                />
-              ))}
-            </Box>
-          </Box>
-
-          <Box display={"flex"} flexDirection={"column"} gap={2} mb={4} ps={3}>
-            <Heading fontSize={"lg"} px={3} mb={3}>
-              Today's biggest hits
-            </Heading>
-            <Box
-              display={"flex"}
-              justifyContent={{ base: "flex-start", md: "flex-start" }}
-              flexDirection={{ base: "column", md: "row" }}
-              width={"90%"}
-              gap={5}
-              fontFamily={"Poppins"}
+            <Text
+              fontSize="sm"
+              color="whiteAlpha.700"
+              fontWeight="medium"
+              cursor="pointer"
+              _hover={{ color: "#1DB954" }}
+              transition="color 0.2s"
             >
-              {songs.map((e, i) => (
-                <SongItem
-                  key={i}
-                  image={e.thumbnail.url}
-                  name={e.title}
-                  desc={e.singer}
-                  id={e._id}
-                />
-              ))}
-            </Box>
-          </Box>
-        </Layout>
-      </Box>
-    </>
+              Show all
+            </Text>
+          </Flex>
+
+          <Grid
+            templateColumns={{
+              base: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              md: "repeat(4, 1fr)",
+              lg: "repeat(5, 1fr)",
+              xl: "repeat(6, 1fr)",
+            }}
+            gap={6} // Aumentato lo spazio tra gli elementi
+          >
+            {albums.map((e, i) => (
+              <AlbumItem
+                key={i}
+                image={e.thumbnail.url}
+                name={e.title}
+                desc={e.description}
+                id={e._id}
+              />
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Sezione Canzoni */}
+        <Box
+          as="section"
+          mb={16} // Aumentato lo spazio tra le sezioni
+          px={4}
+        >
+          <Flex 
+            justify="space-between" 
+            align="center" 
+            mb={8} // Aumentato lo spazio prima della griglia
+          >
+            <Heading 
+              fontSize={{ base: "xl", md: "2xl" }} 
+              fontWeight="bold"
+              letterSpacing="tight"
+            >
+              Today's Biggest Hits
+            </Heading>
+            <Text
+              fontSize="sm"
+              color="whiteAlpha.700"
+              fontWeight="medium"
+              cursor="pointer"
+              _hover={{ color: "#1DB954" }}
+              transition="color 0.2s"
+            >
+              Show all
+            </Text>
+          </Flex>
+
+          <Grid
+            templateColumns={{
+              base: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              md: "repeat(4, 1fr)",
+              lg: "repeat(5, 1fr)",
+              xl: "repeat(6, 1fr)",
+            }}
+            gap={6} // Aumentato lo spazio tra gli elementi
+          >
+            {songs.map((e, i) => (
+              <SongItem
+                key={i}
+                image={e.thumbnail.url}
+                name={e.title}
+                desc={e.singer}
+                id={e._id}
+              />
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Sezione basata sui tuoi gusti */}
+        <Box
+          as="section"
+          mb={16} // Aumentato lo spazio tra le sezioni
+          px={4}
+        >
+          <Flex 
+            justify="space-between" 
+            align="center" 
+            mb={8} // Aumentato lo spazio prima della griglia
+          >
+            <Heading 
+              fontSize={{ base: "xl", md: "2xl" }} 
+              fontWeight="bold"
+              letterSpacing="tight"
+            >
+              Made For You
+            </Heading>
+            <Text
+              fontSize="sm"
+              color="whiteAlpha.700"
+              fontWeight="medium"
+              cursor="pointer"
+              _hover={{ color: "#1DB954" }}
+              transition="color 0.2s"
+            >
+              Show all
+            </Text>
+          </Flex>
+
+          <Grid
+            templateColumns={{
+              base: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              md: "repeat(4, 1fr)",
+              lg: "repeat(5, 1fr)",
+              xl: "repeat(6, 1fr)",
+            }}
+            gap={6} // Aumentato lo spazio tra gli elementi
+          >
+            {songs.slice(0, 6).map((e, i) => (
+              <SongItem
+                key={`suggested-${i}`}
+                image={e.thumbnail.url}
+                name={e.title}
+                desc={e.singer}
+                id={e._id}
+              />
+            ))}
+          </Grid>
+        </Box>
+      </Layout>
+    </Box>
   );
 }
 

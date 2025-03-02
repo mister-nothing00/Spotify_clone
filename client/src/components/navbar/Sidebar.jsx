@@ -1,149 +1,159 @@
 import React, { memo } from "react";
-import { Box, Button, Divider, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, Link, Text, Flex, Icon } from "@chakra-ui/react";
 import { IoHome, IoSearch } from "react-icons/io5";
 import { MdOutlineLibraryMusic } from "react-icons/md";
-import { FaArrowRight } from "react-icons/fa";
-import { LuPlusCircle } from "react-icons/lu";
+import { BiPodcast } from "react-icons/bi";
 import { Link as RouterLink } from "react-router-dom";
 import PlayListCard from "./PlayListCard.jsx";
 
 function Sidebar() {
   return (
-    <>
+    <Box
+      display={{ base: "none", md: "block" }}
+      position="sticky"
+      top="0"
+      width="240px"
+      height="100%"
+      bg="#000000"
+      pt={4}
+      pb={20} // Spazio per il player in fondo
+      overflowY="auto"
+      boxShadow="1px 0 10px rgba(0,0,0,0.3)"
+      zIndex="20"
+      css={{
+        /* Nascondi scrollbar per Chrome, Safari e Opera */
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+        /* Nascondi scrollbar per IE, Edge e Firefox */
+        'msOverflowStyle': 'none',  /* IE e Edge */
+        'scrollbarWidth': 'none',  /* Firefox */
+      }}
+    >
+      {/* Navigazione principale */}
       <Box
-        display={{ base: "none", md: "block" }}
-        position="sticky"
-        width={"240px"}
-        p={4}
-        bg={"black"}
-        py={10}
-        height={"100%"}
-        boxShadow={"lg"}
+        bg="rgba(24,24,24,0.95)"
+        borderRadius="md"
+        mx={3}
+        mb={5}
+        overflow="hidden"
       >
-        <Box
-          background={"gray.900"}
-          borderRadius={"8px"}
-          flexDirection={"column"}
-          justifyContent={"flex-start"}
-          alignContent={"center"}
-          width={"90%"}
-          mb={8}
-          p={2}
+        <Link
+          as={RouterLink}
+          to="/"
+          display="flex"
+          alignItems="center"
+          p={3}
+          transition="all 0.2s ease"
+          _hover={{ bg: "rgba(255,255,255,0.1)", textDecoration: "none" }}
+          borderLeft={window.location.pathname === "/" ? "3px solid #1DB954" : "3px solid transparent"}
+          bg={window.location.pathname === "/" ? "rgba(255,255,255,0.05)" : "transparent"}
         >
-          <Link
-            as={RouterLink}
-            to={"/"}
-            display={"flex"}
-            alignItems={"center"}
-            _hover={{ textDecoration: "none" }}
+          <Icon as={IoHome} boxSize={5} color={window.location.pathname === "/" ? "#1DB954" : "white"} />
+          <Text 
+            ml={3} 
+            fontSize="sm" 
+            fontWeight={window.location.pathname === "/" ? "bold" : "medium"}
+            color={window.location.pathname === "/" ? "#1DB954" : "white"}
           >
-            <IoHome size={20} />
-            <Text fontFamily={"Poppins"} fontSize={"xs"} ms={2}>
-              Home
-            </Text>
-          </Link>
+            Home
+          </Text>
+        </Link>
 
-          <Box display={"flex"} alignItems={"center"} mt={5}>
-            <IoSearch size={20} />
-            <Text
-              fontFamily={"Poppins"}
-              fontSize={"xs"}
-              ms={2}
-              _hover={{ textDecoration: "none" }}
-            >
-              Search
-            </Text>
-          </Box>
-        </Box>
+        <Link
+          as={RouterLink}
+          to="#"
+          display="flex"
+          alignItems="center"
+          p={3}
+          transition="all 0.2s ease"
+          _hover={{ bg: "rgba(255,255,255,0.1)", textDecoration: "none" }}
+        >
+          <Icon as={IoSearch} boxSize={5} />
+          <Text ml={3} fontSize="sm" fontWeight="medium">
+            Search
+          </Text>
+        </Link>
+      </Box>
 
-        {/* CONTENUTO FIGLIO* */}
-        <Box
-          bg={"gray.900"}
-          rounded={"2xl"}
+      {/* Libreria */}
+      <Box
+        bg="rgba(24,24,24,0.95)"
+        borderRadius="md"
+        mx={3}
+        overflow="hidden"
+      >
+        <Flex 
+          align="center" 
+          justify="space-between" 
+          px={3}
           py={4}
-          px={2}
-          me={2}
-          overflowY={"hidden"}
-          width={"90%"}
         >
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-            gap={2}
-            width={"100%"}
-          >
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              width={"100%"}
-            >
-              <MdOutlineLibraryMusic size={20} />
-              <Text
-                display={{ base: "none", md: "block" }}
-                fontFamily={"Poppins"}
-                fontWeight={"semibold"}
-                fontSize={"sm"}
-                ms={1}
-              >
-                Your Library
-              </Text>
-            </Box>
-          </Box>
-          <Divider opacity={0.1} bg={"gray.100"} my={1} />
+          <Flex align="center">
+            <Icon as={MdOutlineLibraryMusic} boxSize={5} />
+            <Text ml={3} fontSize="sm" fontWeight="bold">
+              Your Library
+            </Text>
+          </Flex>
+        </Flex>
+        
+        <Divider opacity={0.1} bg="gray.100" />
 
+        {/* Playlist Card */}
+        <Box px={2} py={2}>
           <Link
             as={RouterLink}
-            to={"/playlist"}
-            fontFamily={"Poppins"}
-            fontSize={"xs"}
-            _hover={{ textDecoration: "none", fontWeight: "medium" }}
+            to="/playlist"
+            _hover={{ textDecoration: "none" }}
           >
             <PlayListCard />
           </Link>
-
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            gap={5}
-            my={8}
-          >
-            <Text
-              fontFamily={"Poppins"}
-              fontWeight={"medium"}
-              fontSize={"md"}
-              width={"100%"}
-              textAlign={"center"}
-            >
-              Let's find some podcasts to follow
-            </Text>
-            <Text
-              fontWeight={"light"}
-              fontSize={"2xs"}
-              textAlign={"center"}
-              width={"100%"}
-            >
-              We'll keep you updated on new episodes
-            </Text>
-            <Button
-              px={"10px"}
-              py={2}
-              size={"sm"}
-              width={{ base: "100%", md: "auto" }}
-              mx={"0"}
-              borderRadius={"16px"}
-            >
-              <Text width={"100%"} textAlign={"center"}>
-                Browse Podcasts
-              </Text>
-            </Button>
-          </Box>
         </Box>
+
+        {/* Sezione Podcast */}
+        <Box p={4} mt={4}>
+          <Text
+            fontSize="sm"
+            fontWeight="bold"
+            mb={3}
+          >
+            Discover Podcasts
+          </Text>
+          <Text
+            fontSize="xs"
+            color="whiteAlpha.700"
+            mb={4}
+          >
+            We'll keep you updated on new episodes from shows you follow
+          </Text>
+          <Button
+            leftIcon={<BiPodcast />}
+            size="sm"
+            width="100%"
+            borderRadius="full"
+            bg="#1DB954"
+            color="black"
+            fontWeight="bold"
+            _hover={{ bg: "#1ED760", transform: "scale(1.02)" }}
+            transition="all 0.2s"
+          >
+            Browse Podcasts
+          </Button>
+        </Box>
+        
+        {/* Link legali */}
+        <Flex 
+          wrap="wrap" 
+          gap={2} 
+          fontSize="xs" 
+          color="whiteAlpha.600"
+          p={4}
+          mt={4}
+        >
+         
+        </Flex>
       </Box>
-    </>
+    </Box>
   );
 }
 

@@ -6,7 +6,7 @@ const connectDb = async() =>{
         await mongoose.connect(process.env.MONGO_URL, {
             dbName: "SpotifyClone",
         });
-        console.log("MongoDB Connected !!")
+        console.log("DB Connected !✅")
         
     } catch (error) {
         console.log(error)
