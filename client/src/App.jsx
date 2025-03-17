@@ -15,8 +15,15 @@ function App() {
   return (
     <>
       {loading ? (
-        <Box width={"100%"} display={"flex"}  alignItems={"center"} height={"auto"}>
-          <Spinner display={"flex"} alignItems={"center"}  />
+        <Box
+          width={"100%"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          height={"100vh"}
+          rounded={"full"}
+        >
+          <Spinner display={"flex"} alignItems={"center"} />
         </Box>
       ) : (
         <BrowserRouter>

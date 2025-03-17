@@ -1,9 +1,10 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useState, useCallback } from "react";
 import { SongData } from "../../hook/context/Song";
 import { Box, IconButton, Image, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Text, Flex } from "@chakra-ui/react";
 import { GrChapterPrevious, GrChapterNext } from "react-icons/gr";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { BsVolumeUp, BsVolumeMute } from "react-icons/bs";
+import { audioService } from "../../utils/audioService";
 
 function Player() {
   const {
@@ -17,30 +18,120 @@ function Player() {
   } = SongData();
 
   useEffect(() => {
-    fetchSingleSong();
-  }, [selectedSong]);
-
-  const audioRef = useRef(null);
-
-  const handlePlayPause = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+    if (selectedSong) {
+      fetchSingleSong();
     }
-    setIsPlaying(!isPlaying);
-  };
+  }, [selectedSong, fetchSingleSong]);
 
+ 
+  useEffect(() => {
+    if (song && song.audio) {
+      audioService.loadSong(song);
+    }
+  }, [song]);
+
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState("0:00");
+  const [totalTime, setTotalTime] = useState("0:00");
+  
+ 
+  const formatTime = useCallback((timeInSeconds) => {
+    if (isNaN(timeInSeconds) || timeInSeconds === 0) return "0:00";
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }, []);
+
+ 
+  useEffect(() => {
+    // Gestore per l'aggiornamento del tempo di riproduzione
+    const removeTimeUpdateListener = audioService.onTimeUpdate((currentTime, audioDuration) => {
+      if (!isNaN(currentTime)) {
+        setProgress(currentTime);
+        setCurrentTime(formatTime(currentTime));
+      }
+      
+      if (!isNaN(audioDuration) && audioDuration > 0) {
+        setDuration(audioDuration);
+        setTotalTime(formatTime(audioDuration));
+      }
+    });
+
+    // Gestore per quando i metadati dell'audio sono caricati
+    const removeLoadedMetadataListener = audioService.onLoadedMetadata((audioDuration) => {
+      if (!isNaN(audioDuration) && audioDuration > 0) {
+        setDuration(audioDuration);
+        setTotalTime(formatTime(audioDuration));
+      }
+    });
+
+    // Gestore per quando la canzone finisce o cambia stato
+    const removeStateChangeListener = audioService.onStateChange((state) => {
+      setIsPlaying(state.isPlaying);
+      
+      // Aggiorna progress e UI solo se abbiamo valori validi
+      if (!isNaN(state.currentTime)) {
+        setProgress(state.currentTime);
+        setCurrentTime(formatTime(state.currentTime));
+      }
+      
+      if (!isNaN(state.duration) && state.duration > 0) {
+        setDuration(state.duration);
+        setTotalTime(formatTime(state.duration));
+      }
+    });
+
+    // Gestore per quando la canzone finisce
+    const removeEndedListener = audioService.onEnded(() => {
+      nextMusic();
+    });
+
+    // Inizializza la UI con i valori attuali
+    setProgress(audioService.getCurrentTime());
+    setCurrentTime(formatTime(audioService.getCurrentTime()));
+    
+    const audioDuration = audioService.getDuration();
+    if (!isNaN(audioDuration) && audioDuration > 0) {
+      setDuration(audioDuration);
+      setTotalTime(formatTime(audioDuration));
+    }
+
+    // Cleanup listeners quando il componente viene smontato
+    return () => {
+      removeTimeUpdateListener();
+      removeLoadedMetadataListener();
+      removeStateChangeListener();
+      removeEndedListener();
+    };
+  }, [nextMusic, formatTime, setIsPlaying]);
+
+  // Handler per play/pause
+  const handlePlayPause = useCallback(() => {
+    audioService.togglePlayPause();
+  }, []);
+
+  // Handler per la barra di progresso
+  const handleProgressChange = useCallback((val) => {
+    if (isNaN(duration) || duration <= 0) return;
+    
+    const newTime = (val / 100) * duration;
+    if (isNaN(newTime)) return;
+    
+    audioService.seek(newTime);
+    setProgress(newTime);
+    setCurrentTime(formatTime(newTime));
+  }, [duration, formatTime]);
+
+  // Gestione volume
   const [volume, setVolume] = useState(1);
   const [prevVolume, setPrevVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
-  const handleVolumeChange = (val) => {
+  const handleVolumeChange = useCallback((val) => {
     const newVolume = val;
     setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
+    audioService.setVolume(newVolume);
     
     if (newVolume === 0) {
       setIsMuted(true);
@@ -48,69 +139,23 @@ function Player() {
       setIsMuted(false);
       setPrevVolume(newVolume);
     }
-  };
+  }, []);
 
-  const toggleMute = () => {
+  const toggleMute = useCallback(() => {
     if (isMuted) {
       setVolume(prevVolume);
-      if (audioRef.current) {
-        audioRef.current.volume = prevVolume;
-      }
+      audioService.setVolume(prevVolume);
       setIsMuted(false);
     } else {
       setPrevVolume(volume);
       setVolume(0);
-      if (audioRef.current) {
-        audioRef.current.volume = 0;
-      }
+      audioService.setVolume(0);
       setIsMuted(true);
     }
-  };
+  }, [isMuted, prevVolume, volume]);
 
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState("0:00");
-  const [totalTime, setTotalTime] = useState("0:00");
 
-  useEffect(() => {
-    const audio = audioRef.current;
-
-    if (!audio) return;
-    
-    const handleLoadedMetaData = () => {
-      setDuration(audio.duration);
-      
-      // Formatta il tempo totale
-      const minutes = Math.floor(audio.duration / 60);
-      const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
-      setTotalTime(`${minutes}:${seconds}`);
-    };
-
-    const handleTimeUpdate = () => {
-      setProgress(audio.currentTime);
-      
-      // Formatta il tempo attuale
-      const minutes = Math.floor(audio.currentTime / 60);
-      const seconds = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
-      setCurrentTime(`${minutes}:${seconds}`);
-    };
-
-    audio.addEventListener("loadedmetadata", handleLoadedMetaData);
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    
-    return () => {
-      audio.removeEventListener("loadedmetadata", handleLoadedMetaData);
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, [song]);
-
-  const handleProgressChange = (val) => {
-    const newTime = (val / 100) * duration;
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime;
-      setProgress(newTime);
-    }
-  };
+  const progressPercentage = duration > 0 ? (progress / duration) * 100 : 0;
 
   return (
     <>
@@ -130,15 +175,6 @@ function Player() {
           height="70px"
           zIndex="1000"
         >
-          {/* Audio element nascosto */}
-          {song.audio && (
-            <audio 
-              ref={audioRef} 
-              src={song.audio.url} 
-              autoPlay={isPlaying} 
-            />
-          )}
-
           <Flex align="center" justify="space-between" width="100%">
             {/* Sezione sinistra: Informazioni canzone */}
             <Flex align="center" width="30%" maxWidth="300px">
@@ -222,9 +258,12 @@ function Player() {
                 <Box flex="1" mx={2}>
                   <Slider
                     aria-label="song-progress"
-                    value={(progress / duration) * 100 || 0}
+                    value={progressPercentage}
                     onChange={handleProgressChange}
                     focusThumbOnChange={false}
+                    min={0}
+                    max={100}
+                    step={0.1}
                   >
                     <SliderTrack bg="rgba(255, 255, 255, 0.2)" height="4px">
                       <SliderFilledTrack bg="#1DB954" />

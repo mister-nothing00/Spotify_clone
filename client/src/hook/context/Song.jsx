@@ -1,6 +1,13 @@
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import useShowToast from "../useShowToast";
+import { audioService } from "../../utils/audioService";
 
 const SongContext = createContext();
 
@@ -9,33 +16,55 @@ export const SongProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [songLoading, setSongLoading] = useState(true);
 
-  const [selectedSong, setSelectedSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  // Inizializza gli stati con i valori dal servizio audio
+  const [selectedSong, setSelectedSong] = useState(audioService.currentSongId);
+  const [isPlaying, setIsPlaying] = useState(audioService.isPlaying);
   const showToast = useShowToast();
 
-  async function fetchSongs() {
+  // Sincronizza lo stato di riproduzione con il servizio audio
+  useEffect(() => {
+    const removeStateChangeListener = audioService.onStateChange((state) => {
+      setIsPlaying(state.isPlaying);
+
+      // Se il servizio audio ha cambiato canzone, aggiorna selectedSong
+      if (state.currentSongId && state.currentSongId !== selectedSong) {
+        setSelectedSong(state.currentSongId);
+      }
+    });
+
+    return () => {
+      removeStateChangeListener();
+    };
+  }, [selectedSong]);
+
+  const fetchSongs = useCallback(async () => {
     try {
       const { data } = await axios.get("/api/song/all");
-
       setSongs(data);
-      setSelectedSong(data[0]._id);
-      setIsPlaying(false);
+
+      // Solo se non c'è una canzone già selezionata, impostiamo la prima
+      if (!selectedSong && data.length > 0) {
+        setSelectedSong(data[0]._id);
+      }
     } catch (error) {
       console.log(error);
+    } finally {
+      setSongLoading(false);
     }
-  }
+  }, [selectedSong]);
 
-  const [song, setSong] = useState([]);
+  const [song, setSong] = useState(null);
 
-  async function fetchSingleSong() {
+  const fetchSingleSong = useCallback(async () => {
+    if (!selectedSong) return;
+
     try {
       const { data } = await axios.get("/api/song/single/" + selectedSong);
-
       setSong(data);
     } catch (error) {
       console.log(error);
     }
-  }
+  }, [selectedSong]);
 
   async function addAlbum(formData, setTitle, setDescription, setFile) {
     setLoading(true);
@@ -48,7 +77,9 @@ export const SongProvider = ({ children }) => {
       setDescription("");
       setFile(null);
     } catch (error) {
-      showToast(error.response.data.message);
+      showToast(
+        error.response?.data?.message || "Errore durante l'aggiunta dell'album"
+      );
       setLoading(false);
     } finally {
       setLoading(false);
@@ -67,7 +98,7 @@ export const SongProvider = ({ children }) => {
     try {
       const { data } = await axios.post("/api/song/new", formData);
       showToast("Success", data.message, "success");
-      setLoading(false)
+      setLoading(false);
       fetchSongs();
       setTitle("");
       setDescription("");
@@ -98,20 +129,18 @@ export const SongProvider = ({ children }) => {
 
   const [albums, setAlbums] = useState([]);
 
-  async function fetchAlbums() {
+  const fetchAlbums = useCallback(async () => {
     try {
       const { data } = await axios.get("/api/song/album/all");
-
       setAlbums(data);
     } catch (error) {
       console.log(error);
     }
-  }
+  }, []);
 
   async function deleteSong(id) {
     try {
       const { data } = await axios.delete("/api/song/" + id);
-
       showToast("Success", data.message, "success");
       fetchSongs();
     } catch (error) {
@@ -119,35 +148,54 @@ export const SongProvider = ({ children }) => {
     }
   }
 
+  // Carica le canzoni e gli album all'avvio
   useEffect(() => {
     fetchSongs();
     fetchAlbums();
-  }, []);
+  }, [fetchSongs, fetchAlbums]);
 
   const [index, setIndex] = useState(0);
 
-  function nextMusic() {
-    if (index === songs.length - 1) {
-      setIndex(0);
-      setSelectedSong(songs[0]._id);
-    } else {
-      setIndex(index + 1);
-      setSelectedSong(songs[index + 1]._id);
+  // Sincronizza l'indice con l'array delle canzoni quando selectedSong cambia
+  useEffect(() => {
+    if (selectedSong && songs.length > 0) {
+      const newIndex = songs.findIndex((song) => song._id === selectedSong);
+      if (newIndex !== -1 && newIndex !== index) {
+        setIndex(newIndex);
+      }
     }
-  }
-  function prevMusic() {
-    if (index === 0) {
-      return null;
+  }, [selectedSong, songs, index]);
+
+  const nextMusic = useCallback(() => {
+    if (!songs.length) return;
+
+    let newIndex;
+    if (index >= songs.length - 1) {
+      newIndex = 0;
     } else {
-      setIndex(index - 1);
-      setSelectedSong(songs[index - 1]._id);
+      newIndex = index + 1;
     }
-  }
+
+    setIndex(newIndex);
+    setSelectedSong(songs[newIndex]._id);
+    setIsPlaying(true);
+  }, [index, songs]);
+
+  const prevMusic = useCallback(() => {
+    if (!songs.length) return;
+
+    if (index <= 0) return;
+
+    const newIndex = index - 1;
+    setIndex(newIndex);
+    setSelectedSong(songs[newIndex]._id);
+    setIsPlaying(true);
+  }, [index, songs]);
 
   const [albumSong, setAlbumSong] = useState([]);
   const [albumData, setAlbumData] = useState([]);
 
-  async function fetchAlbumSong(id) {
+  const fetchAlbumSong = useCallback(async (id) => {
     try {
       const { data } = await axios.get("/api/song/album/" + id);
       setAlbumSong(data.song);
@@ -155,7 +203,20 @@ export const SongProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  }, []);
+
+  // Quando cambia la selectedSong, aggiorna lo stato di riproduzione
+  useEffect(() => {
+    if (audioService.currentSongId !== selectedSong) {
+      // Se stiamo cambiando canzone e il player stava suonando,
+      // continuiamo a suonare la nuova canzone
+      if (isPlaying) {
+        // Lasciamo che il caricamento della canzone avvenga quando
+        // fetchSingleSong recupera i dati e aggiorna song
+      }
+    }
+  }, [selectedSong, isPlaying]);
+
   return (
     <SongContext.Provider
       value={{
