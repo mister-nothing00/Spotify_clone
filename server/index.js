@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://spotify-clone-xz46.onrender.comò",
     methods: ["POST", "GET", "DELETE"],
     credentials: true,
   })
